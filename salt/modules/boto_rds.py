@@ -196,6 +196,30 @@ def parameter_group_exists(name, tags=None, region=None, key=None, keyid=None,
         return resp
 
 
+def db_cluster_exists(name, tags=None, region=None, key=None, keyid=None,
+                           profile=None):
+    '''
+    Check to see if an RDS db cluster exists.
+
+      .. versionadded:: Fluorine
+    CLI example::
+
+        salt myminion boto_rds.db_cluster_exists mydbcluster \
+                region=us-east-1
+    '''
+    conn = _get_conn(region=region, key=key, keyid=keyid, profile=profile)
+
+    try:
+        rds = conn.describe_db_clusters(DBClusterIdentifier=name)
+        return {'exists': bool(rds), 'error': None}
+    except ClientError as e:
+        resp = {}
+        if e.response['Error']['Code'] == 'DBClusterNotFound':
+            resp['exists'] = False
+        resp['error'] = salt.utils.boto3.get_error(e)
+        return resp
+
+
 def subnet_group_exists(name, tags=None, region=None, key=None, keyid=None,
                         profile=None):
     '''
@@ -444,6 +468,43 @@ def create_parameter_group(name, db_parameter_group_family, description,
                 'Created RDS parameter group {0}'.format(name)}
     except ClientError as e:
         return {'error': __utils__['boto3.get_error'](e)}
+
+
+def create_db_cluster(name, engine, master_username, master_user_password,
+                      tags=None, region=None, key=None, keyid=None,
+                      profile=None):
+    '''
+    Create an RDS db cluster
+
+      .. versionadded:: Fluorine
+    CLI example to create an RDS db cluster::
+
+        salt myminion boto_rds.create_db_cluster my-db-cluster MySQL sqlusr sqlpassw
+    '''
+    res = __salt__['boto_rds.db_cluster_exists'](name, tags, region, key,
+                                                 keyid, profile)
+    if res.get('exists'):
+        return {'exists': bool(res)}
+
+    try:
+        conn = _get_conn(region=region, key=key, keyid=keyid, profile=profile)
+        if not conn:
+            return {'results': bool(conn)}
+
+        taglist = _tag_doc(tags)
+        rds = conn.create_db_cluster(DBClusterIdentifier=name,
+                                     Engine=engine,
+                                     MasterUsername=master_username,
+                                     MasterUserPassword=master_user_password,
+                                     Tags=taglist)
+        if not rds:
+            return {'created': False, 'message':
+                    'Failed to create RDS db cluster {0}'.format(name)}
+
+        return {'exists': bool(rds), 'message':
+                'Created RDS db cluster {0}'.format(name)}
+    except ClientError as e:
+        return {'error': salt.utils.boto3.get_error(e)}
 
 
 def create_subnet_group(name, description, subnet_ids, tags=None,
