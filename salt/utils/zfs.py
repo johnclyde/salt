@@ -6,7 +6,7 @@ These functions are for dealing with type conversion and basic execution
 
 :maintainer:    Jorge Schrauwen <sjorge@blackdot.be>
 :maturity:      new
-:depends:       salt.utils.stringutils, salt.ext, salt.module.cmdmod
+:depends:       salt.utils.stringutils, salt.ext
 :platform:      illumos,freebsd,linux
 
 .. versionadded:: 2018.3.1
@@ -25,7 +25,6 @@ from numbers import Number
 from salt.utils.decorators import memoize as real_memoize
 from salt.utils.odict import OrderedDict
 from salt.utils.stringutils import to_num as str_to_num
-import salt.modules.cmdmod
 
 # Import 3rd-party libs
 from salt.ext.six.moves import zip
@@ -35,24 +34,6 @@ re_zfs_size = re.compile(r'^(\d+|\d+(?=\d*)\.\d+)([KkMmGgTtPpEe][Bb]?)$')
 zfs_size = ['K', 'M', 'G', 'T', 'P', 'E']
 
 log = logging.getLogger(__name__)
-
-
-def _check_retcode(cmd):
-    '''
-    Simple internal wrapper for cmdmod.retcode
-    '''
-    return salt.modules.cmdmod.retcode(cmd, output_loglevel='quiet', ignore_retcode=True) == 0
-
-
-def _exec(**kwargs):
-    '''
-    Simple internal wrapper for cmdmod.run
-    '''
-    if 'ignore_retcode' not in kwargs:
-        kwargs['ignore_retcode'] = True
-    if 'output_loglevel' not in kwargs:
-        kwargs['output_loglevel'] = 'quiet'
-    return salt.modules.cmdmod.run_all(**kwargs)
 
 
 def _merge_last(values, merge_after, merge_with=' '):

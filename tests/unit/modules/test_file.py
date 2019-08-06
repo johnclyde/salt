@@ -29,7 +29,6 @@ import salt.utils.platform
 import salt.utils.stringutils
 import salt.modules.file as filemod
 import salt.modules.config as configmod
-import salt.modules.cmdmod as cmdmod
 from salt.exceptions import CommandExecutionError, SaltInvocationError
 from salt.utils.jinja import SaltCacheLoader
 
@@ -61,8 +60,6 @@ class FileReplaceTestCase(TestCase, LoaderModuleMockMixin):
             filemod: {
                 '__salt__': {
                     'config.manage_mode': configmod.manage_mode,
-                    'cmd.run': cmdmod.run,
-                    'cmd.run_all': cmdmod.run_all
                 },
                 '__opts__': {
                     'test': False,
@@ -258,8 +255,6 @@ class FileCommentLineTestCase(TestCase, LoaderModuleMockMixin):
             filemod: {
                 '__salt__': {
                     'config.manage_mode': configmod.manage_mode,
-                    'cmd.run': cmdmod.run,
-                    'cmd.run_all': cmdmod.run_all
                 },
                 '__opts__': {
                     'test': False,
@@ -343,8 +338,6 @@ class FileBlockReplaceTestCase(TestCase, LoaderModuleMockMixin):
             filemod: {
                 '__salt__': {
                     'config.manage_mode': MagicMock(),
-                    'cmd.run': cmdmod.run,
-                    'cmd.run_all': cmdmod.run_all
                 },
                 '__opts__': {
                     'test': False,
@@ -710,8 +703,6 @@ class FileGrepTestCase(TestCase, LoaderModuleMockMixin):
             filemod: {
                 '__salt__': {
                     'config.manage_mode': configmod.manage_mode,
-                    'cmd.run': cmdmod.run,
-                    'cmd.run_all': cmdmod.run_all
                 },
                 '__opts__': {
                     'test': False,
@@ -815,8 +806,6 @@ class FileModuleTestCase(TestCase, LoaderModuleMockMixin):
             filemod: {
                 '__salt__': {
                     'config.manage_mode': configmod.manage_mode,
-                    'cmd.run': cmdmod.run,
-                    'cmd.run_all': cmdmod.run_all
                 },
                 '__opts__': {
                     'test': False,
@@ -1220,8 +1209,6 @@ class FilemodLineTests(TestCase, LoaderModuleMockMixin):
             filemod: {
                 '__salt__': {
                     'config.manage_mode': configmod.manage_mode,
-                    'cmd.run': cmdmod.run,
-                    'cmd.run_all': cmdmod.run_all
                 },
                 '__opts__': {
                     'test': False,
@@ -2806,8 +2793,6 @@ class FileBasicsTestCase(TestCase, LoaderModuleMockMixin):
             filemod: {
                 '__salt__': {
                     'config.manage_mode': configmod.manage_mode,
-                    'cmd.run': cmdmod.run,
-                    'cmd.run_all': cmdmod.run_all
                 },
                 '__opts__': {
                     'test': False,
@@ -2914,9 +2899,7 @@ class LsattrTests(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {
             filemod: {
-                '__salt__': {
-                    'cmd.run': cmdmod.run,
-                },
+                '__salt__': {},
             },
         }
 
@@ -3037,9 +3020,7 @@ class ChattrTests(TestCase, LoaderModuleMockMixin):
     def setup_loader_modules(self):
         return {
             filemod: {
-                '__salt__': {
-                    'cmd.run': cmdmod.run,
-                },
+                '__salt__': {},
                 '__opts__': {
                     'test': False,
                 },
@@ -3282,8 +3263,6 @@ class FileSelinuxTestCase(TestCase, LoaderModuleMockMixin):
         return {
             filemod: {
                 '__salt__': {
-                    'cmd.run': cmdmod.run,
-                    'cmd.retcode': cmdmod.retcode,
                     'selinux.fcontext_add_policy': MagicMock(return_value={'retcode': 0, 'stdout': ''})
                 },
                 '__opts__': {

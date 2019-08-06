@@ -314,12 +314,6 @@ source_file = _build/locale/ref/modules/all/salt.modules.cassandra.pot
 source_lang = en
 source_name = ref/modules/all/salt.modules.cassandra.rst
 
-[salt.ref--modules--all--salt_modules_cmdmod]
-file_filter = locale/<lang>/LC_MESSAGES/ref/modules/all/salt.modules.cmdmod.po
-source_file = _build/locale/ref/modules/all/salt.modules.cmdmod.pot
-source_lang = en
-source_name = ref/modules/all/salt.modules.cmdmod.rst
-
 [salt.ref--modules--all--salt_modules_config]
 file_filter = locale/<lang>/LC_MESSAGES/ref/modules/all/salt.modules.config.po
 source_file = _build/locale/ref/modules/all/salt.modules.config.pot

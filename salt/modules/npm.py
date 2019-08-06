@@ -15,7 +15,6 @@ import logging
 import salt.utils.json
 import salt.utils.path
 import salt.utils.user
-import salt.modules.cmdmod
 from salt.exceptions import CommandExecutionError
 from salt.utils.versions import LooseVersion as _LooseVersion
 from salt.ext import six
@@ -42,27 +41,6 @@ def __virtual__():
                            'because the npm binary could not be located')
     except CommandExecutionError as exc:
         return (False, six.text_type(exc))
-
-
-def _check_valid_version():
-    '''
-    Check the version of npm to ensure this module will work. Currently
-    npm must be at least version 1.2.
-    '''
-
-    # Locate the full path to npm
-    npm_path = salt.utils.path.which('npm')
-
-    # pylint: disable=no-member
-    res = salt.modules.cmdmod.run('{npm} --version'.format(npm=npm_path), output_loglevel='quiet')
-    npm_version, valid_version = _LooseVersion(res), _LooseVersion('1.2')
-    # pylint: enable=no-member
-    if npm_version < valid_version:
-        raise CommandExecutionError(
-            '\'npm\' is not recent enough({0} < {1}). Please Upgrade.'.format(
-                npm_version, valid_version
-            )
-        )
 
 
 def install(pkg=None,

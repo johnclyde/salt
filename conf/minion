@@ -446,7 +446,6 @@
 # access the master has to the minion.  The default here is the empty list,
 # below is an example of how this needs to be formatted in the config file
 #disable_modules:
-#  - cmdmod
 #  - test
 #disable_returners: []
 
@@ -456,7 +455,6 @@
 # the way you think it should since Salt uses many modules internally itself.  At a bare minimum
 # you need the following enabled or else the minion won't start.
 #whitelist_modules:
-#  - cmdmod
 #  - test
 #  - config
 

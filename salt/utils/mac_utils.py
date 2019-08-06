@@ -19,7 +19,6 @@ except ImportError:
     pass
 
 # Import Salt Libs
-import salt.modules.cmdmod
 import salt.utils.args
 import salt.utils.files
 import salt.utils.path
@@ -41,10 +40,7 @@ log = logging.getLogger(__name__)
 
 __virtualname__ = 'mac_utils'
 
-__salt__ = {
-    'cmd.run_all': salt.modules.cmdmod._run_all_quiet,
-    'cmd.run': salt.modules.cmdmod._run_quiet,
-}
+__salt__ = {}
 
 if six.PY2:
     class InvalidFileException(Exception):
