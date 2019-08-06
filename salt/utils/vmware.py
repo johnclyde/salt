@@ -14,8 +14,6 @@ Dependencies
 ~~~~~~~~~~~~
 
 - pyVmomi Python Module
-- ESXCLI: This dependency is only needed to use the ``esxcli`` function. No other
-  functions in this module rely on ESXCLI.
 
 pyVmomi
 -------
@@ -46,30 +44,6 @@ version currently listed in PyPi, run the following:
 
 The 5.5.0.2014.1.1 is a known stable version that this original VMware utils file
 was developed against.
-
-ESXCLI
-------
-
-This dependency is only needed to use the ``esxcli`` function. At the time of this
-writing, no other functions in this module rely on ESXCLI.
-
-The ESXCLI package is also referred to as the VMware vSphere CLI, or vCLI. VMware
-provides vCLI package installation instructions for `vSphere 5.5`_ and
-`vSphere 6.0`_.
-
-.. _vSphere 5.5: http://pubs.vmware.com/vsphere-55/index.jsp#com.vmware.vcli.getstart.doc/cli_install.4.2.html
-.. _vSphere 6.0: http://pubs.vmware.com/vsphere-60/index.jsp#com.vmware.vcli.getstart.doc/cli_install.4.2.html
-
-Once all of the required dependencies are in place and the vCLI package is
-installed, you can check to see if you can connect to your ESXi host or vCenter
-server by running the following command:
-
-.. code-block:: bash
-
-    esxcli -s <host-location> -u <username> -p <password> system syslog config get
-
-If the connection was successful, ESXCLI was successfully installed on your system.
-You should see output related to the ESXi host's syslog configuration.
 
 '''
 

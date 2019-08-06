@@ -25,7 +25,6 @@ Dependencies
 ============
 
 - pyVmomi Python Module
-- ESXCLI
 
 
 pyVmomi
@@ -58,16 +57,6 @@ version currently listed in PyPi, run the following:
 The 5.5.0.2014.1.1 is a known stable version that this original ESXi State
 Module was developed against.
 
-ESXCLI
-------
-
-Currently, about a third of the functions used in the vSphere Execution Module require
-the ESXCLI package be installed on the machine running the Proxy Minion process.
-
-The ESXCLI package is also referred to as the VMware vSphere CLI, or vCLI. VMware
-provides vCLI package installation instructions for `vSphere 5.5`_ and
-`vSphere 6.0`_.
-
 .. _vSphere 5.5: http://pubs.vmware.com/vsphere-55/index.jsp#com.vmware.vcli.getstart.doc/cli_install.4.2.html
 .. _vSphere 6.0: http://pubs.vmware.com/vsphere-60/index.jsp#com.vmware.vcli.getstart.doc/cli_install.4.2.html
 
@@ -78,9 +67,6 @@ server by running the following command:
 .. code-block:: bash
 
     esxcli -s <host-location> -u <username> -p <password> system syslog config get
-
-If the connection was successful, ESXCLI was successfully installed on your system.
-You should see output related to the ESXi host's syslog configuration.
 
 
 Configuration

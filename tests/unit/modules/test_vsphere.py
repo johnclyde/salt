@@ -63,42 +63,6 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
                           vsphere.get_coredump_network_config,
                           HOST, USER, PASSWORD, esxi_hosts='foo')
 
-    def test_get_coredump_network_config_host_list_bad_retcode(self):
-        '''
-        Tests error message returned with list of esxi_hosts.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            host_1 = 'host_1.foo.com'
-            self.assertEqual({host_1: {'Error': ERROR}},
-                             vsphere.get_coredump_network_config(HOST, USER, PASSWORD, esxi_hosts=[host_1]))
-
-    def test_get_coredump_network_config_host_list_success(self):
-        '''
-        Tests successful function return when an esxi_host is provided.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            with patch('salt.modules.vsphere._format_coredump_stdout', MagicMock(return_value={})):
-                host_1 = 'host_1.foo.com'
-                self.assertEqual({host_1: {'Coredump Config': {}}},
-                                 vsphere.get_coredump_network_config(HOST, USER, PASSWORD, esxi_hosts=[host_1]))
-
-    def test_get_coredump_network_config_bad_retcode(self):
-        '''
-        Tests error message given for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            self.assertEqual({HOST: {'Error': ERROR}},
-                             vsphere.get_coredump_network_config(HOST, USER, PASSWORD))
-
-    def test_get_coredump_network_config_success(self):
-        '''
-        Tests successful function return for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            with patch('salt.modules.vsphere._format_coredump_stdout', MagicMock(return_value={})):
-                self.assertEqual({HOST: {'Coredump Config': {}}},
-                                 vsphere.get_coredump_network_config(HOST, USER, PASSWORD))
-
     # Tests for coredump_network_enable function
 
     def test_coredump_network_enable_esxi_hosts_not_list(self):
@@ -109,44 +73,6 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
         self.assertRaises(CommandExecutionError,
                           vsphere.coredump_network_enable,
                           HOST, USER, PASSWORD, True, esxi_hosts='foo')
-
-    def test_coredump_network_enable_host_list_bad_retcode(self):
-        '''
-        Tests error message returned with list of esxi_hosts.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            host_1 = 'host_1.foo.com'
-            self.assertEqual({host_1: {'Error': ERROR}},
-                             vsphere.coredump_network_enable(HOST, USER, PASSWORD, True, esxi_hosts=[host_1]))
-
-    def test_coredump_network_enable_host_list_success(self):
-        '''
-        Tests successful function return when an esxi_host is provided.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            with patch('salt.modules.vsphere._format_coredump_stdout', MagicMock(return_value={})):
-                enabled = True
-                host_1 = 'host_1.foo.com'
-                self.assertEqual({host_1: {'Coredump Enabled': enabled}},
-                                 vsphere.coredump_network_enable(HOST, USER, PASSWORD, enabled, esxi_hosts=[host_1]))
-
-    def test_coredump_network_enable_bad_retcode(self):
-        '''
-        Tests error message given for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            self.assertEqual({HOST: {'Error': ERROR}},
-                             vsphere.coredump_network_enable(HOST, USER, PASSWORD, True))
-
-    def test_coredump_network_enable_success(self):
-        '''
-        Tests successful function return for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            with patch('salt.modules.vsphere._format_coredump_stdout', MagicMock(return_value={})):
-                enabled = True
-                self.assertEqual({HOST: {'Coredump Enabled': enabled}},
-                                 vsphere.coredump_network_enable(HOST, USER, PASSWORD, enabled))
 
     # Tests for set_coredump_network_config function
 
@@ -159,53 +85,6 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
                           vsphere.set_coredump_network_config,
                           HOST, USER, PASSWORD, 'loghost', 'foo', esxi_hosts='bar')
 
-    def test_set_coredump_network_config_host_list_bad_retcode(self):
-        '''
-        Tests error message returned with list of esxi_hosts.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1})):
-            host_1 = 'host_1.foo.com'
-            self.assertEqual({host_1: {'retcode': 1, 'success': False}},
-                             vsphere.set_coredump_network_config(HOST,
-                                                                 USER,
-                                                                 PASSWORD,
-                                                                 'dump-ip.test.com',
-                                                                 esxi_hosts=[host_1]))
-
-    def test_set_coredump_network_config_host_list_success(self):
-        '''
-        Tests successful function return when an esxi_host is provided.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0})):
-            host_1 = 'host_1.foo.com'
-            self.assertEqual({host_1: {'retcode': 0, 'success': True}},
-                             vsphere.set_coredump_network_config(HOST,
-                                                                 USER,
-                                                                 PASSWORD,
-                                                                 'dump-ip.test.com',
-                                                                 esxi_hosts=[host_1]))
-
-    def test_set_coredump_network_config_bad_retcode(self):
-        '''
-        Tests error message given for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1})):
-            self.assertEqual({HOST: {'retcode': 1, 'success': False}},
-                             vsphere.set_coredump_network_config(HOST,
-                                                                 USER,
-                                                                 PASSWORD,
-                                                                 'dump-ip.test.com'))
-
-    def test_set_coredump_network_config_success(self):
-        '''
-        Tests successful function return for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0})):
-            self.assertEqual({HOST: {'retcode': 0, 'success': True}},
-                             vsphere.set_coredump_network_config(HOST,
-                                                                 USER,
-                                                                 PASSWORD,
-                                                                 'dump-ip.test.com'))
 
     # Tests for get_firewall_status function
 
@@ -218,39 +97,6 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
                           vsphere.get_firewall_status,
                           HOST, USER, PASSWORD, esxi_hosts='foo')
 
-    def test_get_firewall_status_host_list_bad_retcode(self):
-        '''
-        Tests error message returned with list of esxi_hosts.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            host_1 = 'host_1.foo.com'
-            self.assertEqual({host_1: {'success': False, 'Error': ERROR, 'rulesets': None}},
-                             vsphere.get_firewall_status(HOST, USER, PASSWORD, esxi_hosts=[host_1]))
-
-    def test_get_firewall_status_host_list_success(self):
-        '''
-        Tests successful function return when an esxi_host is provided.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            host_1 = 'host_1.foo.com'
-            self.assertEqual({host_1: {'rulesets': {}, 'success': True}},
-                             vsphere.get_firewall_status(HOST, USER, PASSWORD, esxi_hosts=[host_1]))
-
-    def test_get_firewall_status_bad_retcode(self):
-        '''
-        Tests error message given for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            self.assertEqual({HOST: {'success': False, 'Error': ERROR, 'rulesets': None}},
-                             vsphere.get_firewall_status(HOST, USER, PASSWORD))
-
-    def test_get_firewall_status_success(self):
-        '''
-        Tests successful function return for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            self.assertEqual({HOST: {'rulesets': {}, 'success': True}},
-                             vsphere.get_firewall_status(HOST, USER, PASSWORD))
 
     # Tests for enable_firewall_ruleset function
 
@@ -375,40 +221,6 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
                           vsphere.get_syslog_config,
                           HOST, USER, PASSWORD, esxi_hosts='foo')
 
-    def test_get_syslog_config_host_list_bad_retcode(self):
-        '''
-        Tests error message returned with list of esxi_hosts.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            host_1 = 'host_1.foo.com'
-            self.assertEqual({host_1: {'message': ERROR, 'success': False}},
-                             vsphere.get_syslog_config(HOST, USER, PASSWORD, esxi_hosts=[host_1]))
-
-    def test_get_syslog_config_host_list_success(self):
-        '''
-        Tests successful function return when an esxi_host is provided.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            host_1 = 'host_1.foo.com'
-            self.assertEqual({host_1: {'success': True}},
-                             vsphere.get_syslog_config(HOST, USER, PASSWORD, esxi_hosts=[host_1]))
-
-    def test_get_syslog_config_bad_retcode(self):
-        '''
-        Tests error message given for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            self.assertEqual({HOST: {'message': ERROR, 'success': False}},
-                             vsphere.get_syslog_config(HOST, USER, PASSWORD))
-
-    def test_get_syslog_config_success(self):
-        '''
-        Tests successful function return for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            self.assertEqual({HOST: {'success': True}},
-                             vsphere.get_syslog_config(HOST, USER, PASSWORD))
-
     # Tests for reset_syslog_config function
 
     def test_reset_syslog_config_no_syslog_config(self):
@@ -428,82 +240,6 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
                           vsphere.reset_syslog_config,
                           HOST, USER, PASSWORD, syslog_config='test', esxi_hosts='foo')
 
-    def test_reset_syslog_config_invalid_config_param(self):
-        '''
-        Tests error message returned when an invalid syslog_config parameter is provided.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={})):
-            error = 'Invalid syslog configuration parameter'
-            self.assertEqual({HOST: {'success': False, 'test': {'message': error, 'success': False}}},
-                             vsphere.reset_syslog_config(HOST, USER, PASSWORD,
-                                                         syslog_config='test'))
-
-    def test_reset_syslog_config_host_list_bad_retcode(self):
-        '''
-        Tests error message returned with list of esxi_hosts.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            host_1 = 'host_1.foo.com'
-            self.assertEqual({host_1: {'success': False, 'logdir': {'message': ERROR, 'success': False}}},
-                             vsphere.reset_syslog_config(HOST, USER, PASSWORD,
-                                                         syslog_config='logdir',
-                                                         esxi_hosts=[host_1]))
-
-    def test_reset_syslog_config_host_list_success(self):
-        '''
-        Tests successful function return when an esxi_host is provided.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            host_1 = 'host_1.foo.com'
-            self.assertEqual({host_1: {'success': True, 'loghost': {'success': True}}},
-                             vsphere.reset_syslog_config(HOST, USER, PASSWORD,
-                                                         syslog_config='loghost',
-                                                         esxi_hosts=[host_1]))
-
-    def test_reset_syslog_config_bad_retcode(self):
-        '''
-        Tests error message given for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            self.assertEqual({HOST: {'success': False, 'logdir-unique': {'message': ERROR, 'success': False}}},
-                             vsphere.reset_syslog_config(HOST, USER, PASSWORD,
-                                                         syslog_config='logdir-unique'))
-
-    def test_reset_syslog_config_success(self):
-        '''
-        Tests successful function return for a single ESXi host.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            self.assertEqual({HOST: {'success': True, 'default-rotate': {'success': True}}},
-                             vsphere.reset_syslog_config(HOST, USER, PASSWORD,
-                                                         syslog_config='default-rotate'))
-
-    def test_reset_syslog_config_success_multiple_configs(self):
-        '''
-        Tests successful function return for a single ESXi host when passing in multiple syslog_config values.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            self.assertEqual({HOST: {'success': True,
-                                     'default-size': {'success': True},
-                                     'default-timeout': {'success': True}}},
-                             vsphere.reset_syslog_config(HOST, USER, PASSWORD,
-                                                         syslog_config='default-size,default-timeout'))
-
-    def test_reset_syslog_config_success_all_configs(self):
-        '''
-        Tests successful function return for a single ESXi host when passing in multiple syslog_config values.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0, 'stdout': ''})):
-            self.assertEqual({HOST: {'success': True,
-                                     'logdir': {'success': True},
-                                     'loghost': {'success': True},
-                                     'default-rotate': {'success': True},
-                                     'default-size': {'success': True},
-                                     'default-timeout': {'success': True},
-                                     'logdir-unique': {'success': True}}},
-                             vsphere.reset_syslog_config(HOST, USER, PASSWORD,
-                                                         syslog_config='all'))
-
     # Tests for _reset_syslog_config_params function
 
     def test_reset_syslog_config_params_no_valid_reset(self):
@@ -516,27 +252,6 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
         self.assertEqual(ret, vsphere._reset_syslog_config_params(HOST, USER, PASSWORD,
                                                                   'cmd', config, valid_resets))
 
-    def test_reset_syslog_config_params_error(self):
-        '''
-        Tests function returns False when the esxxli function returns an unsuccessful retcode.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            valid_resets = ['hello', 'world']
-            error_dict = {'success': False, 'message': ERROR}
-            ret = {'success': False, 'hello': error_dict, 'world': error_dict}
-            self.assertDictEqual(ret, vsphere._reset_syslog_config_params(HOST, USER, PASSWORD,
-                                                                          'cmd', valid_resets, valid_resets))
-
-    def test_reset_syslog_config_params_success(self):
-        '''
-        Tests function returns True when the esxxli function returns a successful retcode.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0})):
-            valid_resets = ['hello', 'world']
-            ret = {'success': True, 'hello': {'success': True}, 'world': {'success': True}}
-            self.assertDictEqual(ret, vsphere._reset_syslog_config_params(HOST, USER, PASSWORD,
-                                                                          'cmd', valid_resets, valid_resets))
-
     # Tests for _set_syslog_config_helper function
 
     def test_set_syslog_config_helper_no_valid_reset(self):
@@ -546,24 +261,6 @@ class VsphereTestCase(TestCase, LoaderModuleMockMixin):
         config = 'foo'
         ret = {'success': False, 'message': '\'{0}\' is not a valid config variable.'.format(config)}
         self.assertEqual(ret, vsphere._set_syslog_config_helper(HOST, USER, PASSWORD, config, 'bar'))
-
-    def test_set_syslog_config_helper_bad_retcode(self):
-        '''
-        Tests function returns False when the esxcli function returns an unsuccessful retcode.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 1, 'stdout': ERROR})):
-            config = 'default-rotate'
-            self.assertEqual({config: {'success': False, 'message': ERROR}},
-                             vsphere._set_syslog_config_helper(HOST, USER, PASSWORD, config, 'foo'))
-
-    def test_set_syslog_config_helper_success(self):
-        '''
-        Tests successful function return.
-        '''
-        with patch('salt.utils.vmware.esxcli', MagicMock(return_value={'retcode': 0})):
-            config = 'logdir'
-            self.assertEqual({config: {'success': True}},
-                             vsphere._set_syslog_config_helper(HOST, USER, PASSWORD, config, 'foo'))
 
 
 @skipIf(NO_MOCK, NO_MOCK_REASON)
